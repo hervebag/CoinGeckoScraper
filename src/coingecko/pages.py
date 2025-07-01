@@ -1,3 +1,4 @@
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -16,15 +17,13 @@ class LandingPage(WebPage):
     def get_cryptocurrencies_on_next_page(self) -> CryptoListElement:
         try:
             # Find the pagination link with aria-label="next"
-            next_button = self._wait.until(EC.presence_of_element_located(
-                *CryptoCurrencyListLocator.PAGINATION_BUTTON
-            ))
+            next_button = self._wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[aria-label="next"]')))
 
             # Scroll into view
             self._driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", next_button)
 
             # Wait until it's clickable and click
-            self._wait.until(EC.element_to_be_clickable(*CryptoCurrencyListLocator.PAGINATION_BUTTON)).click()
+            self._wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'a[aria-label="next"]'))).click()
             print("Navigated to next page.")
         except Exception as e:
             print("No more pages or an error occurred:", str(e))
